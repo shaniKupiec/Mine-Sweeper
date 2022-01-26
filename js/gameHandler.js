@@ -1,61 +1,44 @@
 'use strict'
 
-function renderBoard(mat, selector) {
+function buildBoard(mat, selector) {
     var strHTML = '<table border="0"><tbody>';
     for (var i = 0; i < mat.length; i++) {
         strHTML += '<tr>';
         for (var j = 0; j < mat[0].length; j++) {
-            setMinesNegsCount(getLocation(i, j));
-            var cell = mat[i][j];
             var className = `cell cell-${i}-${j}`;
-            var value = HIDE;
-            var location = getLocation(i, j);
-            // console.log(location);
-            if (cell.isShown) {
-                className += ' shown';
-                if (cell.isMine) value = MINE;
-                else value = cell.minesAroundCount;
-            }
-            strHTML += `<td class="${className}" onmousedown="cellClicked(event)">${value}</td>`
+            strHTML += `<td class="${className}" onmousedown="cellClicked(event)">${HIDE}</td>`
         }
-        // onmousedown="WhichButton(event)"
-        // onclick="f(this)"
-        // onclick="cellClicked(this)"
-        // onclick="cellClicked(${location})"
-        // oncontextmenu="event.preventDefault();"
         strHTML += '</tr>'
     }
     strHTML += '</tbody></table>';
     var elContainer = document.querySelector(selector);
     elContainer.innerHTML = strHTML;
-    console.log('strHTML', strHTML);
+    // console.log('strHTML', strHTML);
 }
 
-// var cell = document.querySelector('cell-0-0');
-// cell.addEventListener('click', WhichButton);
-
-function cellClicked(event) {
-    // console.log('event',event);
-    // console.log('event.currentTarget',event.currentTarget);
-    // console.log('event.currentTarget.className',event.currentTarget.className);
-    // console.log('event.button',event.button);
-    if(typeof event !== 'object') return;
-    var className = event.currentTarget.className;
-    // console.log('className',className);
-    var location = getLocationFromClass(className);
-    switch (event.button) {
-        case 0:
-            console.log('left');
-            openCell(location);
-            break;
-        case 2:
-            console.log('right');
-            setFlag(location);
-            break;
+// add mines in random places
+function setMines(location) {
+    // turning the mat to one array so we can draw random cell.
+    // we also remove the first clicked cell from the array - so the first click wont be a mine
+    var cells = matToArray();
+    var indexL = location.i * gBoard[0].length + location.j;
+    cells.splice(indexL, 1);
+    // console.log('cells', cells);
+    for (var i = 0; i < gLevel.MINES; i++) {
+        var cell = drawNum(cells);
+        cell.isMine = true;
     }
 }
 
-// location object {i, j}
+function renderBoard() {
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[0].length; j++) {
+            setMinesNegsCount(getLocation(i, j));
+        }
+    }
+}
+
+// count number of mines neighbors
 function setMinesNegsCount(location) {
     var count = 0
     var rowIdx = location.i;
@@ -70,30 +53,63 @@ function setMinesNegsCount(location) {
         }
     }
     gBoard[rowIdx][colIdx].minesAroundCount = count;
-    // renderCell(location, count);
 }
 
-function openCell(location){
-    console.log('open');
+function cellClicked(event) {
+    if (typeof event !== 'object') return;
+    var className = event.currentTarget.className;
+    var location = getLocationFromClass(className);
+    switch (event.button) {
+        case 0:
+            openCell(location);
+            break;
+        case 2:
+            setFlag(location);
+            break;
+    }
+}
+
+function openCell(location) {
     var cell = gBoard[location.i][location.j];
-    console.log('cell',cell);
-    if(cell.isShown){
-        console.log('open already');
-        return
+
+    if (!gGame.isOn) return;
+    if (gFirstClick) { // when it's the first click we need to set mines and render
+        gFirstClick = false;
+        setMines(location);
+        renderBoard();
     }
-    if(cell.isMarked){
-        console.log('the cell is marked');
+    if (cell.isShown) return;
+    if (cell.isMarked) return;
+    if (cell.isMine) {
+        // losing game
+        console.log('1game over you lost');
+        gameOver(false, location);
         return;
     }
-    if(cell.isMine){
-        console.log('game over you lost');
-        gameOver(false);
-        return;
-    }
+    // open cell
     var value = gNumbers[cell.minesAroundCount];
     renderCell(location, value);
+    gGame.shownCount++;
+
+    if (isVictory()) gameOver(true, location);
 }
 
-function setFlag(){
-    console.log('flag');
+function setFlag(location) {
+    var cell = gBoard[location.i][location.j];
+
+    if (!gGame.isOn) return;
+    if (cell.isShown) return;
+    if (cell.isMarked) {
+        //remove flag
+        renderCell(location, HIDE);
+        gGame.markedCount--;
+        cell.isMarked = false;
+        return;
+    }
+    // add flag
+    renderCell(location, FLAG);
+    gGame.markedCount++;
+    cell.isMarked = true;
+
+    if (isVictory()) gameOver(true, location);
 }

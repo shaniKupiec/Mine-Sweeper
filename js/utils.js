@@ -42,6 +42,35 @@ function getLocationFromClass(className) {
     return { i: +location[0], j: +location[1] };
 }
 
+// combine the mat to one array
+function matToArray() {
+    var mat = [];
+    for (var i = 0; i < gBoard.length; i++) {
+        mat = mat.concat(gBoard[i]);
+    }
+    return mat;
+}
+
+// draw random num from an array
+function drawNum(array) {
+    var idx = getRandomInt(0, array.length - 1);
+    var num = array[idx];
+    array.splice(idx, 1);
+    return num;
+}
+
+// not in use:
+function emptyCells() {
+    var res = [];
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[0].length; j++) {
+            var cell = gBoard[i][j];
+            if (cell === EMPTY) res.push({ i: i, j: j });
+        }
+    }
+    return res;
+}
+
 function renderEndGame() {
     var strHTML = `<div class="end-game"> <button onclick = "init()" > Restart </button > <span></span> </div > `;
     var elContainer = document.querySelector('.board-container');
@@ -97,12 +126,6 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
 }
 
-function drawNum(array) {
-    var idx = getRandomInt(0, array.length - 1);
-    var num = array[idx];
-    array.splice(idx, 1);
-    return num;
-}
 // Move the player by keyboard arrows
 function handleKey(event) {
 
@@ -126,17 +149,6 @@ function handleKey(event) {
 
     }
 
-}
-
-function emptyCells() {
-    var res = [];
-    for (var i = 0; i < gBoard.length; i++) {
-        for (var j = 0; j < gBoard[0].length; j++) {
-            var cell = gBoard[i][j];
-            if (cell === EMPTY) res.push({ i: i, j: j });
-        }
-    }
-    return res;
 }
 
 function getRandomColor() {

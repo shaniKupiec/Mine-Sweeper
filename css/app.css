@@ -29,11 +29,17 @@ body {
 
 table {
   margin: auto;
-  background-color: grey;
+  background-color: rgb(151, 151, 151);
 }
 
 .game-buttons{
   padding: 40px;
+}
+
+img {
+  display: inline-block;
+  width: 40px;
+  height: 35px;
 }
 
 /* .end-game{
