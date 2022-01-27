@@ -1,3 +1,5 @@
+'use strict'
+
 function createMat(ROWS, COLS = ROWS) {
     var mat = [];
     for (var i = 0; i < ROWS; i++) {
@@ -8,15 +10,6 @@ function createMat(ROWS, COLS = ROWS) {
         mat.push(row);
     }
     return mat;
-}
-
-function createCell() {
-    return {
-        minesAroundCount: 0,
-        isShown: false,
-        isMine: false,
-        isMarked: false
-    }
 }
 
 function getLocation(i, j) {
@@ -30,16 +23,22 @@ function renderCell(location, value) {
     elCell.innerHTML = value;
 }
 
+function render(value, selector) {
+    var el = document.querySelector(selector);
+    el.innerHTML = value;
+}
+
+function renderAdditional(value, selector, length) {
+    var str = '';
+    for (let i = 0; i < length; i++) {
+        str += value;
+    }
+    render(str, selector);
+}
+
 // Returns the class name for a specific cell
 function getClassName(location) {
     return 'cell-' + location.i + '-' + location.j;
-}
-
-// Returns the location for a specific class name
-function getLocationFromClass(className) {
-    var str = className.slice(10);
-    var location = str.split('-');
-    return { i: +location[0], j: +location[1] };
 }
 
 // combine the mat to one array
@@ -59,6 +58,41 @@ function drawNum(array) {
     return num;
 }
 
+//timer
+function startStopWatch() {
+    gWatchInterval = setInterval(updateWatch, 1)
+    gStartTime = Date.now()
+}
+
+function updateWatch() {
+    var now = Date.now()
+    var minutes;
+    var seconds;
+    var time = ((now - gStartTime) / 1000).toFixed(0); // to fixed?
+    if (time < 60) {
+        if (time < 10) seconds = '0' + time;
+        else seconds = time;
+        minutes = '00';
+    }
+    else {
+        seconds = time % 60;
+        if(seconds < 10) seconds = '0' + seconds;
+        minutes = Math.floor(time / 60);
+        if(minutes < 10) minutes = '0' + minutes;
+        else if(minutes > 59){
+            alert('too long you lost the game');
+            gameOver(false, location)
+        }
+    }
+    time = minutes + ':' + seconds;
+    render(time, '.time');
+}
+
+function endStopWatch() {
+    clearInterval(gWatchInterval);
+    gWatchInterval = null;
+}
+
 // not in use:
 function emptyCells() {
     var res = [];
@@ -69,6 +103,13 @@ function emptyCells() {
         }
     }
     return res;
+}
+
+// Returns the location for a specific class name
+function getLocationFromClass(className) {
+    var str = className.slice(10);
+    var location = str.split('-');
+    return { i: +location[0], j: +location[1] };
 }
 
 function renderEndGame() {
@@ -158,22 +199,4 @@ function getRandomColor() {
         color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
-}
-
-//timer
-function startStopWatch() {
-    gWatchInterval = setInterval(updateWatch, 1)
-    gStartTime = Date.now()
-}
-
-function updateWatch() {
-    var now = Date.now()
-    var time = ((now - gStartTime) / 1000).toFixed(3)
-    var elTime = document.querySelector('.time')
-    elTime.innerText = time
-}
-
-function endStopWatch() {
-    clearInterval(gWatchInterval)
-    gWatchInterval = null
 }
