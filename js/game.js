@@ -58,10 +58,10 @@ function init() {
 }
 
 // after the user chose size
-function startGame(size) {
+function setUpGame(size) {
     if (size) gRecentLevel = size;
     else size = gRecentLevel; // in case the user clicked on smiley to start over
-    gameSize(size);
+    setGameSize(size);
     var lives = (size === 4) ? 1 : 3; // if there is a size 4, the user gets only 1 life, hints, and safe clicks
     gGame = {
         isOn: true,
@@ -97,8 +97,9 @@ function startGame(size) {
     gStack = [];
 }
 
+
 // set number of mines
-function gameSize(size = gRecentLevel) {
+function setGameSize(size = gRecentLevel) {
     var minesNum;
     if (size === 4) minesNum = 2;
     else if (size === 8) minesNum = 12;
@@ -177,7 +178,7 @@ function storeBestTime() {
     }
 }
 
-function showBestTime() { // work on
+function showBestTime() {
     var isLocalStorageEmpty = true;
     for (var level = 4; level < 13; level++) {
         if (level % 4) continue;
@@ -198,7 +199,7 @@ function showBestTime() { // work on
 }
 
 function manuallyCreate() {
-    startGame();
+    setUpGame();
     gCreatMines.inProcess = true;
 }
 
@@ -218,13 +219,17 @@ function toggelMine(location, isAdd) {
     }
 }
 
-function play(isRegular, location) { // first click or start to play after manually positioned
+function startGame(isRegular, location) { // first click or start to play after manually positioned
     if (isRegular) {
         setMines(location);
     }
     else {
         gCreatMines.inProcess = false;
         gLevel.MINES = gCreatMines.minesNum;
+        var elUndoButton = document.querySelector('.undo-on');
+        elUndoButton.style.backgroundColor = 'red';
+        var elButton = document.querySelector('.top .play');
+        elButton.style.display = 'none';
     }
     gGame.firstClick = false;
     renderBoard();

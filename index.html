@@ -16,10 +16,10 @@
 
     <div class="overGame">
         <div class="top">
-            <span class="face" onclick="startGame()"></span>
+            <span class="face" onclick="setUpGame()"></span>
             <span class="timer"></span>
             <button class="manually" onclick="manuallyCreate()">Manually Create</button>
-            <button class="play" onclick="play(false)">Play</button>
+            <button class="play" onclick="startGame(false)">Start Game</button>
         </div>
 
         <div class="additional-data">
@@ -30,9 +30,9 @@
 
         <div class="game-buttons">
             <span>Chose your level</span><br>
-            <button onclick="startGame(4)">Easy(4*4)</button>
-            <button onclick="startGame(8)">Hard(8*8)</button>
-            <button onclick="startGame(12)">Exstreme!(12*12)</button>
+            <button onclick="setUpGame(4)">Easy(4*4)</button>
+            <button onclick="setUpGame(8)">Hard(8*8)</button>
+            <button onclick="setUpGame(12)">Exstreme!(12*12)</button>
 
         </div>
     </div>

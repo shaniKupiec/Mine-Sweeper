@@ -68,7 +68,7 @@ function updateWatch() {
     var now = Date.now()
     var minutes;
     var seconds;
-    var time = ((now - gStartTime) / 1000).toFixed(0); // to fixed?
+    var time = ((now - gStartTime) / 1000).toFixed(0);
     if (time < 60) {
         if (time < 10) seconds = '0' + time;
         else seconds = time;

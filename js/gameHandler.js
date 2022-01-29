@@ -91,7 +91,7 @@ function openCell(location) {
     }
     if (cell.isShown) return;
     if (cell.isMarked) return;
-    if (gGame.firstClick) play(true, location); // when it's the first click we need to set mines and render 
+    if (gGame.firstClick) startGame(true, location); // when it's the first click we need to set mines and render 
     if (gGame.isHint) {
         hintMode(location);
         return;
