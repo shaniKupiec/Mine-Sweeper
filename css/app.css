@@ -13,25 +13,37 @@ body {
   width: 30px;
 }
 
-.time {
+.timer {
   background-color: red;
-  color: white;
   margin: 5px;
-  float: right;
   font-size: xx-large;
   top: 10px;
   position: fixed;
   right: 10px;
 }
 
+.manually{
+  margin: 5px;
+  top: 10px;
+  position: fixed;
+  left: 10px;
+}
+
+.play{
+  display: none;
+  margin: 5px;
+  top: 10px;
+  position: fixed;
+  left: 125px;
+}
+
 .additional-data{
   display: none;
-  float: left;
   margin: 20px;
   text-align: left;
   position: absolute;
   left: 10px;
-  top: 10px;
+  top: 40px;
 }
 
 .game-buttons{
@@ -45,9 +57,8 @@ img {
 }
 
 .bestPlayer{
-  left: 50px;
-  width: 200px;
-  margin: 20px;
+  margin-top: 40px;
+  margin-left: 25px;
 }
 
 .bestPlayer tr{
@@ -68,8 +79,6 @@ table.game{
 .cell {
   text-align: center;
   transition: 0.5s;
-  /* border: solid;
-  border-color: black; */
 }
 
 .cell:hover {
@@ -78,7 +87,7 @@ table.game{
 
 
 /* down */
-.underGame .hint{
+.underGame{
   /* display: none; */
   position: absolute;
   right: 37.5%;

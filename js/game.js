@@ -5,6 +5,8 @@ const THREE = '<img src="img/num3.png" />';
 const FOUR = '<img src="img/num4.png" />';
 const FIVE = '<img src="img/num5.png" />';
 const SIX = '<img src="img/num6.png" />';
+const SEVEN = '7️⃣';
+const EIGHT = '8️⃣';
 
 const EMPTY = '<img src="img/empty.png" />';
 const HIDE = '<img src="img/cover.png" />';
@@ -21,6 +23,7 @@ const SUNGLASSES = '<img src="img/sunglasses.png" />';
 
 const LIFE = '❤️';
 const HINT = '💡';
+const SAFE = '🦺';
 
 // block open window on click right
 const noContext = document.querySelector('#noContextMenu');
@@ -33,46 +36,65 @@ var gLevel;
 var gGame;
 var gWatchInterval;
 var gStartTime;
-var gFirstWin = true;
+var gCreatMines;
+var gLocalStorageIsEmpty = true;
+var gStack;
 var gRecentLevel = 8; // for case the user starts the game with clicking on smiley
-var gNumbers = [EMPTY, ONE, TWO, THREE, FOUR, FIVE, SIX];
+var gNumbers = [EMPTY, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT];
 
 
 function init() {
     render(SMILE, '.overGame span');
-    render('00:00', '.time');
-    var addData = document.querySelector('.underGame');
-    addData.style.display = 'none';
+    render('00:00', '.timer');
+    var elButtons = document.querySelector('.underGame');
+    elButtons.style.display = 'none';
+
+    gCreatMines = {
+        inProcess: false,
+        minesNum: 0
+    };
+
+    showBestTime();
 }
 
 // after the user chose size
 function startGame(size) {
-    var lives = (size === 4) ? 1 : 3; // if there is a size 4, the user gets only 1 life
+    if (size) gRecentLevel = size;
+    else size = gRecentLevel; // in case the user clicked on smiley to start over
+    gameSize(size);
+    var lives = (size === 4) ? 1 : 3; // if there is a size 4, the user gets only 1 life, hints, and safe clicks
     gGame = {
         isOn: true,
         shownCount: 0,
         markedCount: 0,
         secsPassed: 0,
         lives: lives,
-        hints: 3,
+        hints: lives,
+        safeClicks: lives,
         firstClick: true,
         isHint: false
     }
-    if (size) gRecentLevel = size; // in case the user clicked on smiley to start over
-    gameSize(size);
     gBoard = createMat(gLevel.SIZE);
     buildBoard(gBoard, '.board-container');
 
-    var addData = document.querySelector('.additional-data');
-    addData.style.display = 'block'; // adds lives and hints symbols
+    var elAddData = document.querySelector('.additional-data');
+    elAddData.style.display = 'block'; // adds lives and hints symbols
 
-    var addData = document.querySelector('.underGame');
-    addData.style.display = 'none'; // hide the hints button
+    var elHintButton = document.querySelector('.hint-on');
+    elHintButton.style.backgroundColor = 'rgb(69, 168, 69)'; //change hint button to green
+
+    var elClickButton = document.querySelector('.safe-click-on');
+    elClickButton.style.backgroundColor = 'rgb(69, 168, 69)'; //change safe click button to green
+
+    var elUndoButton = document.querySelector('.undo-on');
+    elUndoButton.style.backgroundColor = 'rgb(69, 168, 69)'; //change safe click button to green
 
     renderAdditional(LIFE, '.lives span', gGame.lives);
     renderAdditional(HINT, '.hints span', gGame.hints);
+    renderAdditional(SAFE, '.safes span', gGame.safeClicks);
     endStopWatch();
     init();
+    gStack = [];
 }
 
 // set number of mines
@@ -88,12 +110,12 @@ function gameSize(size = gRecentLevel) {
 }
 
 // after the game is over
-function gameOver(isWin, location = getLocation(0, 0)) {
+function gameOver(isWin, location) {
     // open all closed mines, and make the one the user clicked on - red, and the wrong flags - red
     openMins();
     if (isWin) {
         render(SUNGLASSES, '.overGame span');
-        setLocalStorge();
+        storeBestTime();
     } else {
         render(SAD, '.overGame span');
         renderCell(location, RED_MINE);
@@ -104,8 +126,8 @@ function gameOver(isWin, location = getLocation(0, 0)) {
     console.log(msg);
     gGame.isOn = false;
 
-    var addData = document.querySelector('.underGame');
-    addData.style.display = 'none';
+    var elAddData = document.querySelector('.underGame');
+    elAddData.style.display = 'none';
 }
 
 // check if there is a victoty
@@ -132,27 +154,124 @@ function openMins() {
     }
 }
 
-function setLocalStorge() {
+function storeBestTime() {
     var now = Date.now();
-    var time = ((now - gStartTime) / 1000).toFixed(3);
+    var gameDuration = ((now - gStartTime) / 1000).toFixed(3);
     var level = gLevel.SIZE;
-    var lastTime = localStorage.getItem(level);
-    console.log('time', time);
-    console.log('lastTime', lastTime);
-    if (!lastTime || time < lastTime) {
-        if (!lastTime) {
-            if (gFirstWin) { // if it's the first win - show table
+    var bestTime = localStorage.getItem(level);
+    if (!bestTime || gameDuration < bestTime) {
+        if (!bestTime) {
+            if (gLocalStorageIsEmpty) { // if it's the first win - show table
                 var elFirstTR = document.querySelector(`[data-num="0"]`);
                 elFirstTR.style.display = 'block';
-                gFirstWin = false;
+                gLocalStorageIsEmpty = false;
             } // if it's the first win for level - show row
             var elTr = document.querySelector(`[data-num="${level}"]`)
             elTr.style.display = 'block';
-        } else{
+        } else {
             localStorage.removeItem(level);
-            localStorage.setItem(level, time);
         }
-        var elTd = document.querySelector(`[data-num="${level}"] .fastTime`)
-        elTd.innerText = time;
+        localStorage.setItem(level, gameDuration);
+        var elTd = document.querySelector(`[data-num="${level}"] .bestTime`)
+        elTd.innerText = gameDuration;
     }
+}
+
+function showBestTime() { // work on
+    var isLocalStorageEmpty = true;
+    for (var level = 4; level < 13; level++) {
+        if (level % 4) continue;
+        var bestTime = localStorage.getItem(level);
+        if (bestTime) {
+            var elTr = document.querySelector(`[data-num="${level}"]`)
+            elTr.style.display = 'block';
+            var elTd = document.querySelector(`[data-num="${level}"] .bestTime`)
+            elTd.innerText = bestTime;
+            isLocalStorageEmpty = false;
+        }
+    }
+    if (!isLocalStorageEmpty) { // show table if there is a score in local storage
+        var elFirstTR = document.querySelector(`[data-num="0"]`);
+        elFirstTR.style.display = 'block';
+        gLocalStorageIsEmpty = false;
+    }
+}
+
+function manuallyCreate() {
+    startGame();
+    gCreatMines.inProcess = true;
+}
+
+function toggelMine(location, isAdd) {
+    var cell = gBoard[location.i][location.j];
+    cell.isMine = isAdd;
+    var value = isAdd ? MINE : HIDE;
+    renderCell(location, value);
+
+    var elButton = document.querySelector('.top .play');
+    if (isAdd) {
+        gCreatMines.minesNum++;
+        if (gCreatMines.minesNum) elButton.style.display = 'block'; //adds play button
+    } else {
+        gCreatMines.minesNum--;
+        if (!gCreatMines.minesNum) elButton.style.display = 'none'; //removes play button
+    }
+}
+
+function play(isRegular, location) { // first click or start to play after manually positioned
+    if (isRegular) {
+        setMines(location);
+    }
+    else {
+        gCreatMines.inProcess = false;
+        gLevel.MINES = gCreatMines.minesNum;
+    }
+    gGame.firstClick = false;
+    renderBoard();
+    startStopWatch();
+    var elAddData = document.querySelector('.underGame');
+    elAddData.style.display = 'block'; // show buttons: hints, safe clicks
+}
+
+function undo() {
+    if (!gStack.length) return;
+    var lastTurn = gStack.pop();
+    var location = Object.values(lastTurn)[0];
+    switch (Object.keys(lastTurn)[0]) {
+        case 'addFlag': // remove flag
+            var cell = gBoard[location.i][location.j];
+            renderCell(location, HIDE);
+            gGame.markedCount--;
+            cell.isMarked = false;
+            break;
+        case 'removeFlag': // add flag
+            var cell = gBoard[location.i][location.j];
+            renderCell(location, FLAG);
+            gGame.markedCount++;
+            cell.isMarked = true;
+            break;
+        case 'openCell': // hide cell
+            closeCell(location);
+            break;
+        case 'openCells': // hind all cells
+            for (let i = 0; i < location.length; i++) {
+                closeCell(location[i]);
+            }
+            break;
+        case 'openMine': // close a mine
+            closeCell(location);
+            gLevel.MINES++;
+            break;
+    }
+    if (!gStack.length) {
+        var elUndoButton = document.querySelector('.undo-on');
+        elUndoButton.style.backgroundColor = 'red'; // telling the user that the button does not work anymore
+    }
+}
+
+function closeCell(location) {
+    var cell = gBoard[location.i][location.j];
+    renderCell(location, HIDE);
+    cell.isShown = false;
+    gGame.shownCount--;
 }
