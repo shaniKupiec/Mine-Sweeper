@@ -1,14 +1,17 @@
 body {
   background-color: black;
-  color:white;
+  color: white;
   text-align: center;
   margin: auto;
 }
 
+img {
+  max-width: 100%;
+}
 
 /* up */
 
-header{
+header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -16,17 +19,17 @@ header{
   margin: 20px;
 }
 
-.manually-create{
+.manually-create {
   display: flex;
   gap: 10px;
   width: 36px;
 }
 
-.manually-create-play{
+.manually-create-play {
   display: none;
 }
 
-.game-btns{
+.game-btns {
   display: flex;
   flex-direction: column;
 }
@@ -36,44 +39,32 @@ header{
   margin-bottom: 10px;
 }
 
-.timer {
-  /* background-color: red;
-  margin: 5px;
-  font-size: xx-large;
-  top: 10px;
-  position: fixed;
-  right: 10px; */
-}
-
-
-.additional-data{
-  display: none;
-  margin: 20px;
-  text-align: left;
+nav {
   position: absolute;
-  left: 10px;
-  top: 40px;
+  left: 0;
+  margin-inline-start: 10px;
 }
 
-img {
-  max-width: 100%;  
-  max-height: 100%;
+.additional-data {
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-inline-start: 5px;
 }
 
-.bestPlayer{
-  margin-top: 40px;
-  margin-left: 25px;
+.best-player {
+  margin-top: 20px;
 }
 
-.bestPlayer tr{
+.best-player tr {
   display: none;
 }
 
-/* table */
-table.game{
+/* board-game */
+table.game {
   background-color: rgb(185, 185, 185);
-  table-layout:fixed;
-  width: 300px; 
+  table-layout: fixed;
+  width: 300px;
   border-spacing: 0;
   position: absolute;
   left: 37.5%;
@@ -89,9 +80,8 @@ table.game{
   background-color: rgb(116, 126, 129);
 }
 
-
 /* down */
-.underGame{
+.underGame {
   /* display: none; */
   position: absolute;
   right: 37.5%;

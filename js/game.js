@@ -54,7 +54,7 @@ function init() {
         minesNum: 0
     };
 
-    showBestTime();
+    showbestTime();
 }
 
 // after the user chose size
@@ -78,7 +78,7 @@ function setUpGame(size) {
     buildBoard(gBoard, '.board-container');
 
     var elAddData = document.querySelector('.additional-data');
-    elAddData.style.display = 'block'; // adds lives and hints symbols
+    elAddData.style.display = 'flex'; // adds lives and hints symbols
 
     var elHintButton = document.querySelector('.hint-on');
     elHintButton.style.backgroundColor = 'rgb(69, 168, 69)'; //change hint button to green
@@ -116,7 +116,7 @@ function gameOver(isWin, location) {
     openMins();
     if (isWin) {
         render(SUNGLASSES, '.face');
-        storeBestTime();
+        storebestTime();
     } else {
         render(SAD, '.face');
         renderCell(location, RED_MINE);
@@ -155,7 +155,7 @@ function openMins() {
     }
 }
 
-function storeBestTime() {
+function storebestTime() {
     var now = Date.now();
     var gameDuration = ((now - gStartTime) / 1000).toFixed(3);
     var level = gLevel.SIZE;
@@ -173,12 +173,12 @@ function storeBestTime() {
             localStorage.removeItem(level);
         }
         localStorage.setItem(level, gameDuration);
-        var elTd = document.querySelector(`[data-num="${level}"] .bestTime`)
+        var elTd = document.querySelector(`[data-num="${level}"] .best-time`)
         elTd.innerText = gameDuration;
     }
 }
 
-function showBestTime() {
+function showbestTime() {
     var isLocalStorageEmpty = true;
     for (var level = 4; level < 13; level++) {
         if (level % 4) continue;
@@ -186,7 +186,7 @@ function showBestTime() {
         if (bestTime) {
             var elTr = document.querySelector(`[data-num="${level}"]`)
             elTr.style.display = 'block';
-            var elTd = document.querySelector(`[data-num="${level}"] .bestTime`)
+            var elTd = document.querySelector(`[data-num="${level}"] .best-time`)
             elTd.innerText = bestTime;
             isLocalStorageEmpty = false;
         }
