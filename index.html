@@ -11,16 +11,28 @@
 
 
 <body onload="init()">
-    <!-- <h2>Score: <span>0</span></h2> -->
 
 
-    <div class="overGame">
-        <div class="top">
+    <header>
+        <section class="manually-create">
+            <button onclick="manuallyCreate()">Manually Create</button>
+            <button class="manually-create-play" onclick="startGame(false)">Start Game</button> 
+        </section>
+
+        <section class="game-btns">
             <span class="face" onclick="setUpGame()"></span>
-            <span class="timer"></span>
-            <button class="manually" onclick="manuallyCreate()">Manually Create</button>
-            <button class="play" onclick="startGame(false)">Start Game</button>
-        </div>
+            <span>Chose your level</span><br>
+            <div class="game-levels">
+                <button onclick="setUpGame(4)">Easy(4*4)</button>
+                <button onclick="setUpGame(8)">Hard(8*8)</button>
+                <button onclick="setUpGame(12)">Extreme!(12*12)</button>
+            </div>
+        </section>
+
+        <div class="timer"></div>
+    </header>
+
+    <nav>
 
         <div class="additional-data">
             <div class="lives">Lives<span></span></div>
@@ -28,36 +40,29 @@
             <div class="safes">Safe Clicks<span></span></div>
         </div>
 
-        <div class="game-buttons">
-            <span>Chose your level</span><br>
-            <button onclick="setUpGame(4)">Easy(4*4)</button>
-            <button onclick="setUpGame(8)">Hard(8*8)</button>
-            <button onclick="setUpGame(12)">Exstreme!(12*12)</button>
+        <table class="bestPlayer">
+            <tr data-num="0">
+                <td colspan="2">BEST TIMES</td>
+            </tr>
+            <tr data-num="4">
+                <td>LEVEL 4 -</td>
+                <td class="bestTime"></td>
+                <td>s </td>
+            </tr>
+            <tr data-num="8">
+                <td>LEVEL 8 -</td>
+                <td class="bestTime"></td>
+                <td>s </td>
+            </tr>
+            <tr data-num="12">
+                <td>LEVEL 12 -</td>
+                <td class="bestTime"></td>
+                <td>s </td>
+            </tr>
+        </table>
+        
+    </nav>
 
-        </div>
-    </div>
-
-    <table class="bestPlayer">
-        <tr data-num="0">
-            <td colspan="2">BEST TIMES</td>
-        </tr>
-        <tr data-num="4">
-            <td>LEVEL 4 -</td>
-            <td class="bestTime"></td>
-            <td>s </td>
-        </tr>
-        <tr data-num="8">
-            <td>LEVEL 8 -</td>
-            <td class="bestTime"></td>
-            <td>s </td>
-        </tr>
-        <tr data-num="12">
-            <td>LEVEL 12 -</td>
-            <td class="bestTime"></td>
-            <td>s </td>
-        </tr>
-
-    </table>
 
     <div class="board-container" id="noContextMenu"></div>
 
@@ -67,7 +72,7 @@
         <button class="undo-on" onclick="undo()">UNDO</button>
     </div>
 
-    <div class="footer"> &#169 Shani Kupiec</div>
+    <footer> &#169 Shani Kupiec</footer>
 
     <script src="js/utils.js"></script>
     <script src="js/gameHandler.js"></script>

@@ -44,7 +44,7 @@ var gNumbers = [EMPTY, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT];
 
 
 function init() {
-    render(SMILE, '.overGame span');
+    render(SMILE, '.face');
     render('00:00', '.timer');
     var elButtons = document.querySelector('.underGame');
     elButtons.style.display = 'none';
@@ -115,10 +115,10 @@ function gameOver(isWin, location) {
     // open all closed mines, and make the one the user clicked on - red, and the wrong flags - red
     openMins();
     if (isWin) {
-        render(SUNGLASSES, '.overGame span');
+        render(SUNGLASSES, '.face');
         storeBestTime();
     } else {
-        render(SAD, '.overGame span');
+        render(SAD, '.face');
         renderCell(location, RED_MINE);
     }
     endStopWatch();
@@ -131,7 +131,7 @@ function gameOver(isWin, location) {
     elAddData.style.display = 'none';
 }
 
-// check if there is a victoty
+// check if there is a victory
 function isVictory() {
     return gGame.shownCount + gGame.markedCount === gLevel.SIZE ** 2 && gGame.markedCount === gLevel.MINES;
 }
@@ -203,13 +203,13 @@ function manuallyCreate() {
     gCreatMines.inProcess = true;
 }
 
-function toggelMine(location, isAdd) {
+function toggleMine(location, isAdd) {
     var cell = gBoard[location.i][location.j];
     cell.isMine = isAdd;
     var value = isAdd ? MINE : HIDE;
     renderCell(location, value);
 
-    var elButton = document.querySelector('.top .play');
+    var elButton = document.querySelector('.manually-create-play');
     if (isAdd) {
         gCreatMines.minesNum++;
         if (gCreatMines.minesNum) elButton.style.display = 'block'; //adds play button
@@ -228,7 +228,7 @@ function startGame(isRegular, location) { // first click or start to play after 
         gLevel.MINES = gCreatMines.minesNum;
         var elUndoButton = document.querySelector('.undo-on');
         elUndoButton.style.backgroundColor = 'red';
-        var elButton = document.querySelector('.top .play');
+        var elButton = document.querySelector('.manually-create-play');
         elButton.style.display = 'none';
     }
     gGame.firstClick = false;

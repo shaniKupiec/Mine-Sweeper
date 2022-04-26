@@ -7,35 +7,44 @@ body {
 
 
 /* up */
-.face {
-  position: absolute;
-  top: 5px;
+
+header{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  margin: 20px;
+}
+
+.manually-create{
+  display: flex;
+  gap: 10px;
+  width: 36px;
+}
+
+.manually-create-play{
+  display: none;
+}
+
+.game-btns{
+  display: flex;
+  flex-direction: column;
+}
+
+.face img {
   width: 30px;
+  margin-bottom: 10px;
 }
 
 .timer {
-  background-color: red;
+  /* background-color: red;
   margin: 5px;
   font-size: xx-large;
   top: 10px;
   position: fixed;
-  right: 10px;
+  right: 10px; */
 }
 
-.manually{
-  margin: 5px;
-  top: 10px;
-  position: fixed;
-  left: 10px;
-}
-
-.play{
-  display: none;
-  margin: 5px;
-  top: 10px;
-  position: fixed;
-  left: 125px;
-}
 
 .additional-data{
   display: none;
@@ -44,11 +53,6 @@ body {
   position: absolute;
   left: 10px;
   top: 40px;
-}
-
-.game-buttons{
-  margin-top: 50px;
-  right: 35%;
 }
 
 img {
@@ -94,7 +98,7 @@ table.game{
   bottom: 70px;
 }
 
-.footer {
+footer {
   position: fixed;
   left: 0px;
   bottom: 0px;

@@ -40,14 +40,14 @@ function setMines(location) {
 function renderBoard() {
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard[0].length; j++) {
-            setMinesNegsCount(getLocation(i, j));
+            setMinesNeigsCount(getLocation(i, j));
             renderCell(getLocation(i, j), HIDE);
         }
     }
 }
 
 // count number of mines neighbors
-function setMinesNegsCount(location) {
+function setMinesNeigsCount(location) {
     var count = 0
     var rowIdx = location.i;
     var colIdx = location.j;
@@ -86,7 +86,7 @@ function openCell(location) {
 
     if (!gGame.isOn) return;
     if (gCreatMines.inProcess) {
-        toggelMine(location, !cell.isMine); // adds or removes mine in manually positioned
+        toggleMine(location, !cell.isMine); // adds or removes mine in manually positioned
         return;
     }
     if (cell.isShown) return;
@@ -110,9 +110,9 @@ function openCell(location) {
         gStack.push({ openMine: location });
     } else {
         if (!cell.minesAroundCount) {
-            var opendCells = [];
-            fullExpand(location, opendCells);
-            gStack.push({ openCells: opendCells });
+            var openedCells = [];
+            fullExpand(location, openedCells);
+            gStack.push({ openCells: openedCells });
         }
         else {  // open cell
             var value = gNumbers[cell.minesAroundCount];
@@ -180,7 +180,7 @@ function hintMode(location) {
     }, 1000);
 }
 
-function fullExpand(location, opendCells) {
+function fullExpand(location, openedCells) {
     var rowIdx = location.i;
     var colIdx = location.j;
     for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
@@ -193,11 +193,11 @@ function fullExpand(location, opendCells) {
             cell.isShown = true;
             renderCell(getLocation(i, j), value);
             gGame.shownCount++;
-            opendCells.push(getLocation(i, j));
-            if (!cell.minesAroundCount) fullExpand(getLocation(i, j), opendCells);
+            openedCells.push(getLocation(i, j));
+            if (!cell.minesAroundCount) fullExpand(getLocation(i, j), openedCells);
         }
     }
-    return opendCells;
+    return openedCells;
 }
 
 function hintOn() {
@@ -214,8 +214,8 @@ function safeClickOn() {
     if (!gGame.safeClicks) return;
 
     renderAdditional(SAFE, '.safes span', --gGame.safeClicks);
-    var emptys = emptyCells();
-    var location = drawNum(emptys);
+    var empties = emptyCells();
+    var location = drawNum(empties);
     var selector = '.' + getClassName(location);
     var elCell = document.querySelector(selector);
     elCell.style.backgroundColor = 'rgb(212, 96, 96)';
