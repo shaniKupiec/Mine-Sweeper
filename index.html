@@ -34,7 +34,7 @@
 
     <nav>
 
-        <div class="additional-data">
+        <div class="help-track">
             <div class="lives">Lives<span></span></div>
             <div class="hints">Hints<span></span></div>
             <div class="safes">Safe Clicks<span></span></div>
@@ -64,15 +64,17 @@
     </nav>
 
 
-    <div class="board-container" id="noContextMenu"></div>
+    <main>
+        <section class="board-container" id="noContextMenu"></section>
+        
+        <div class="help-btns">
+            <button class="hint-on" onclick="hintOn()">HINT</button>
+            <button class="safe-click-on" onclick="safeClickOn()">SAFE CLICK</button>
+            <button class="undo-on" onclick="undo()">UNDO</button>
+        </div>
+    </main>
 
-    <div class="underGame">
-        <button class="hint-on" onclick="hintOn()">HINT</button>
-        <button class="safe-click-on" onclick="safeClickOn()">SAFE CLICK</button>
-        <button class="undo-on" onclick="undo()">UNDO</button>
-    </div>
-
-    <footer> &#169 Shani Kupiec</footer>
+    <footer> &#169 Shani Kupiec 2022</footer>
 
     <script src="js/utils.js"></script>
     <script src="js/gameHandler.js"></script>

@@ -46,7 +46,7 @@ var gNumbers = [EMPTY, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT];
 function init() {
     render(SMILE, '.face');
     render('00:00', '.timer');
-    var elButtons = document.querySelector('.underGame');
+    var elButtons = document.querySelector('.help-btns');
     elButtons.style.display = 'none';
 
     gCreatMines = {
@@ -77,7 +77,7 @@ function setUpGame(size) {
     gBoard = createMat(gLevel.SIZE);
     buildBoard(gBoard, '.board-container');
 
-    var elAddData = document.querySelector('.additional-data');
+    var elAddData = document.querySelector('.help-track');
     elAddData.style.display = 'flex'; // adds lives and hints symbols
 
     var elHintButton = document.querySelector('.hint-on');
@@ -127,7 +127,7 @@ function gameOver(isWin, location) {
     console.log(msg);
     gGame.isOn = false;
 
-    var elAddData = document.querySelector('.underGame');
+    var elAddData = document.querySelector('.help-btns');
     elAddData.style.display = 'none';
 }
 
@@ -234,7 +234,7 @@ function startGame(isRegular, location) { // first click or start to play after 
     gGame.firstClick = false;
     renderBoard();
     startStopWatch();
-    var elAddData = document.querySelector('.underGame');
+    var elAddData = document.querySelector('.help-btns');
     elAddData.style.display = 'block'; // show buttons: hints, safe clicks
 }
 
