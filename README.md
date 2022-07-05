@@ -9,6 +9,5 @@
 - Safe click- shows the user a random place where it is safe to click(not a mine)
 - Timer
 - Option to manually create a board by placing the mines where the users wants
-- Using local storage
 
 <a href="https://shanikupiec.github.io/Minesweeper" target="blank">Link to GitHub Pages</a>
